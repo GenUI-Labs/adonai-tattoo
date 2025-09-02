@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0b0b;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -12,15 +12,114 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  @apply bg-neutral-950 text-white;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Parallax optimizations */
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0) scale(1.1);
+}
+
+.parallax-bg img,
+.parallax-bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Enhanced scroll behavior */
+@supports (scroll-behavior: smooth) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Mobile parallax optimizations */
+@media (max-width: 768px) {
+  .parallax-bg {
+    transform: translate3d(0, 0, 0) scale(1.05);
+    /* Ensure smooth performance on mobile */
+    -webkit-transform: translate3d(0, 0, 0) scale(1.05);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+  }
+  
+  /* Better mobile video handling */
+  .parallax-bg video {
+    object-fit: contain;
+    object-position: center center;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 768px) {
+  
+  /* Center all content on mobile (except header) */
+  body > div:not(header) {
+    text-align: center;
+  }
+  
+  body > div:not(header) h1,
+  body > div:not(header) h2,
+  body > div:not(header) h3,
+  body > div:not(header) h4,
+  body > div:not(header) h5,
+  body > div:not(header) h6 {
+    text-align: center;
+  }
+  
+  body > div:not(header) p {
+    text-align: center;
+  }
+  
+  body > div:not(header) .flex {
+    justify-content: center;
+  }
+  
+  /* Explicitly exclude header from centering */
+  header,
+  header *,
+  header .flex,
+  header div {
+    text-align: left !important;
+    justify-content: space-between !important;
+  }
+  
+  /* Section content centering */
+  section {
+    text-align: center;
+  }
+  
+  section .grid {
+    justify-items: center;
+  }
+  
+  section .flex {
+    justify-content: center;
+  }
+  
+  /* Card content centering */
+  .bg-white\/10,
+  .bg-neutral-800,
+  .rounded-lg,
+  .rounded-xl,
+  .rounded-2xl {
+    text-align: center;
+  }
 }

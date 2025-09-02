@@ -3,8 +3,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { useParallaxBackground } from '../hooks/useParallax';
 
 export default function GallerySection() {
+  const parallaxRef = useParallaxBackground({ 
+    speed: 0.4,
+    disabled: false
+  });
   const galleryItems = [
     {
       id: 1,
@@ -45,8 +50,23 @@ export default function GallerySection() {
   ];
 
   return (
-    <section className="py-20 bg-neutral-900">
-      <div className="max-w-6xl mx-auto px-4">
+    <section 
+      ref={parallaxRef}
+      className="relative py-20 overflow-hidden parallax-container"
+    >
+      {/* Background Image with Parallax */}
+      <div className="parallax-bg z-0">
+        <Image
+          src="/Gallery_background.png"
+          alt="Adonai Tattoo Gallery Background"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/75"></div>
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -71,7 +91,7 @@ export default function GallerySection() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="gallery-item group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl min-h-[200px]"
+              className="gallery-item group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl min-h-[200px] border border-white/10 hover:border-brand-red/30"
             >
               {/* Image */}
               <div className="absolute inset-0">
@@ -96,8 +116,8 @@ export default function GallerySection() {
                 />
               </div>
               
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300"></div>
+              {/* Enhanced Overlay for better contrast */}
+              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300"></div>
               
               {/* Content */}
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-4 text-center">
@@ -107,8 +127,8 @@ export default function GallerySection() {
                 </p>
               </div>
               
-              {/* Border Effect */}
-              <div className="absolute inset-0 border border-transparent group-hover:border-white/30 rounded-lg transition-colors duration-300"></div>
+              {/* Enhanced Border Effect */}
+              <div className="absolute inset-0 border border-transparent group-hover:border-brand-red/50 rounded-lg transition-colors duration-300"></div>
             </motion.div>
           ))}
         </div>
@@ -119,7 +139,7 @@ export default function GallerySection() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="text-center mt-12"
         >
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-300 text-sm bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 inline-block border border-white/10">
             Hover over each image to see more details about our work.
           </p>
         </motion.div>

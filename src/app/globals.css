@@ -69,6 +69,11 @@ body {
   }
 }
 
+/* Custom gradient utilities */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
 /* Additional mobile optimizations */
 @media (max-width: 768px) {
   

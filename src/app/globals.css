@@ -59,11 +59,13 @@ body {
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
   }
-  
-  /* Better mobile video handling */
-  .parallax-bg video {
-    object-fit: contain;
-    object-position: center center;
+}
+
+/* Gallery mobile fixes */
+@media (max-width: 768px) {
+  .gallery-item {
+    min-height: 200px !important;
+    width: 100% !important;
   }
 }
 

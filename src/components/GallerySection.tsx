@@ -2,51 +2,45 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Cross, Heart, Bird, Crown, Fish, Star } from 'lucide-react';
+import Image from 'next/image';
 
 export default function GallerySection() {
   const galleryItems = [
     {
       id: 1,
-      title: "Celtic Cross",
-      icon: Cross,
-      description: "Traditional Celtic cross with intricate knotwork",
-      gradient: "from-amber-500 to-orange-600"
+      title: "Featured Artwork",
+      image: "/gallery_images/FB_IMG_1756778136286.jpg",
+      description: "Professional tattoo artistry"
     },
     {
       id: 2,
-      title: "Sacred Heart",
-      icon: Heart,
-      description: "Sacred heart with flame and thorns",
-      gradient: "from-red-500 to-rose-600"
+      title: "Custom Design",
+      image: "/gallery_images/FB_IMG_1756778165287.jpg",
+      description: "Unique and meaningful artwork"
     },
     {
       id: 3,
-      title: "Holy Dove",
-      icon: Bird,
-      description: "Dove with olive branch and scripture",
-      gradient: "from-blue-500 to-indigo-600"
+      title: "Detailed Work",
+      image: "/gallery_images/FB_IMG_1756778176648.jpg",
+      description: "Precision and attention to detail"
     },
     {
       id: 4,
-      title: "Crown of Thorns",
-      icon: Crown,
-      description: "Crown of thorns with scripture verse",
-      gradient: "from-purple-500 to-violet-600"
+      title: "Portfolio Piece",
+      image: "/gallery_images/Screenshot_20250901_205637_Facebook.jpg",
+      description: "Creative and artistic expression"
     },
     {
       id: 5,
-      title: "Christian Fish",
-      icon: Fish,
-      description: "Ichthys symbol with flowing design",
-      gradient: "from-teal-500 to-cyan-600"
+      title: "Client Showcase",
+      image: "/gallery_images/Screenshot_20250901_205657_Facebook.jpg",
+      description: "Beautiful finished work"
     },
     {
       id: 6,
-      title: "Star of David",
-      icon: Star,
-      description: "Star of David with Hebrew scripture",
-      gradient: "from-green-500 to-emerald-600"
+      title: "Artistic Excellence",
+      image: "/gallery_images/Screenshot_20250901_205749_Facebook.jpg",
+      description: "Quality craftsmanship and artistry"
     }
   ];
 
@@ -77,28 +71,44 @@ export default function GallerySection() {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl"
+              className="gallery-item group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl min-h-[200px]"
             >
-              {/* Background Gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}></div>
+              {/* Image */}
+              <div className="absolute inset-0">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  priority={index < 3}
+                  unoptimized={true}
+                  onError={(e) => {
+                    // Fallback to regular img tag if Next.js Image fails
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const fallbackImg = document.createElement('img');
+                    fallbackImg.src = item.image;
+                    fallbackImg.alt = item.title;
+                    fallbackImg.className = 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500';
+                    target.parentNode?.appendChild(fallbackImg);
+                  }}
+                />
+              </div>
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300"></div>
               
               {/* Content */}
-              <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
-                <item.icon 
-                  size={48} 
-                  className="text-white mb-4 group-hover:scale-110 transition-transform duration-300" 
-                />
-                <h3 className="text-white font-semibold mb-2 text-lg">{item.title}</h3>
-                <p className="text-gray-300 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-4 text-center">
+                <h3 className="text-white font-semibold mb-1 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">{item.title}</h3>
+                <p className="text-gray-200 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {item.description}
                 </p>
               </div>
               
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-              
               {/* Border Effect */}
-              <div className="absolute inset-0 border border-transparent group-hover:border-white/20 rounded-lg transition-colors duration-300"></div>
+              <div className="absolute inset-0 border border-transparent group-hover:border-white/30 rounded-lg transition-colors duration-300"></div>
             </motion.div>
           ))}
         </div>
@@ -109,12 +119,8 @@ export default function GallerySection() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="text-center mt-12"
         >
-          <p className="text-gray-400 text-sm mb-4">
-            *Actual portfolio images will be displayed here
-          </p>
-          <p className="text-gray-500 text-xs max-w-lg mx-auto">
-            These are representative examples of Christian tattoo themes. The final gallery will showcase 
-            Steve's actual completed works with client permission.
+          <p className="text-gray-400 text-sm">
+            Hover over each image to see more details about our work.
           </p>
         </motion.div>
       </div>

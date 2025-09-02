@@ -65,9 +65,9 @@ export default function Header() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-1000 fade-in ${
+      <header className={`fixed top-0 left-0 right-0 z-50 transition delay-300 duration-1000 fade-in ${
         isScrolled 
-          ? 'bg-gradient-to-b from-red-900/60 to-black/80 backdrop-blur-lg' 
+          ? 'bg-gradient-to-b from-black/95 to-red-900/70 backdrop-blur-sm' 
           : 'bg-transparent opacity-100'
       }`}>
         <div className="max-w-6xl mx-auto px-2 py-4">

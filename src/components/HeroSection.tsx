@@ -22,7 +22,7 @@ export default function HeroSection() {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover md:object-cover object-contain"
+          className="w-full h-full object-cover"
         >
           <source src="/Hero.mp4" type="video/mp4" />
           Your browser does not support the video tag.
@@ -100,21 +100,7 @@ export default function HeroSection() {
         </blockquote>
       </motion.div>
       
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 2 }}
-        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20"
-      >
-        <div className="w-5 h-8 border-2 border-white/40 rounded-full flex justify-center backdrop-blur-sm">
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1 h-2 bg-white/70 rounded-full mt-1"
-          />
-        </div>
-      </motion.div>
+     
     </section>
   );
 }

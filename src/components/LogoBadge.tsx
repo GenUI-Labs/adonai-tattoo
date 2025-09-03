@@ -11,7 +11,7 @@ export default function LogoBadge({ isScrolled = false, onClick, hideTitleOnMobi
   return (
     <button 
       onClick={onClick}
-      className="flex items-center space-x-3 cursor-pointer transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-red focus:ring-offset-2 focus:ring-offset-transparent rounded-lg p-1"
+      className="flex items-center space-x-3 cursor-pointer transition-all duration-300 hover:scale-105 focus:outline-none rounded-lg p-1"
     >
       {/* Adonai Tattoo Logo */}
       <div className="w-16 h-16 relative">

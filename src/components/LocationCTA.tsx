@@ -11,10 +11,9 @@ interface LocationCTAProps {
 
 export default function LocationCTA({ address, phoneNumber }: LocationCTAProps) {
   return (
-    <section className="relative overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-red via-red-800 to-brand-black"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+    <section className="relative  overflow-hidden">
+      {/* Simple Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-neutral-700 to-black"></div>
       
       {/* Content */}
       <div className="relative z-10 py-20">
@@ -25,21 +24,22 @@ export default function LocationCTA({ address, phoneNumber }: LocationCTAProps) 
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">Ready to Start Your Journey?</h2>
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">Ready to plan your tattoo?</h2>
             <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
               Let&apos;s create something beautiful together. Reach out to schedule your consultation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href={process.env.NEXT_PUBLIC_MESSENGER_URL || '#'}
-                className="inline-flex items-center justify-center gap-3 bg-white text-brand-red hover:bg-gray-100 font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="inline-flex items-center justify-center gap-3 bg-white text-red-600 hover:bg-gray-100 hover:text-red-700 font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                style={{ color: '#dc2626' }}
               >
                 <MessageCircle size={24} />
-                Message Us
+                <span style={{ color: '#dc2626' }}>Message Us</span>
               </a>
               <a
                 href={`tel:${phoneNumber}`}
-                className="inline-flex items-center justify-center gap-3 border-2 border-white text-white hover:bg-white hover:text-brand-red font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="inline-flex items-center justify-center gap-3 border-2 border-white text-white hover:bg-white hover:text-red-600 font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <Phone size={24} />
                 Call Us

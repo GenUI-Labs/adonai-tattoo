@@ -1,247 +1,121 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Cross, HandHeart, Shield, Users, Star, Paintbrush, Sparkles } from 'lucide-react';
+import { Heart, Cross, Palette, Users } from 'lucide-react';
 
 export default function ValuesSection() {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [activeValue, setActiveValue] = React.useState<number>(0);
-
-  const values = [
+  const coreValues = [
     {
       icon: Cross,
       title: "Faith First",
-      description: "Christ is at the center of everything we do, guiding our hands and hearts in every design.",
-      position: { x: 50, y: 5 } // Top of cross
+      description: "Christ at the center of every design"
     },
     {
       icon: Heart,
       title: "Love & Compassion",
-      description: "We create art with love, treating every client as family in our sacred space.",
-      position: { x: 78, y: 15 } // Upper right
+      description: "Treating every client as family"
     },
     {
-      icon: Shield,
-      title: "Excellence & Integrity",
-      description: "21 years of faithful service, delivering exceptional artistry with honest hearts.",
-      position: { x: 88, y: 37 } // Right of horizontal beam
-    },
-    {
-      icon: Star,
-      title: "Hope & Transformation",
-      description: "Every design tells a story of God's grace and the beauty of spiritual transformation.",
-      position: { x: 78, y: 60 } // Lower right
-    },
-    {
-      icon: HandHeart,
-      title: "Prayer & Purpose",
-      description: "Each tattoo begins with prayer, ensuring God's blessing on the artwork and journey.",
-      position: { x: 50, y: 85 } // Bottom of cross
+      icon: Palette,
+      title: "Sacred Artistry",
+      description: "Honoring stories through ink"
     },
     {
       icon: Users,
-      title: "Community & Fellowship",
-      description: "Building lasting relationships through shared faith and meaningful conversations.",
-      position: { x: 22, y: 60 } // Lower left
-    },
-    {
-      icon: Paintbrush,
-      title: "Sacred Artistry",
-      description: "Every tattoo is a sacred expression, honoring both the client's story and God's creative spirit.",
-      position: { x: 12, y: 37 } // Left of horizontal beam
-    },
-    {
-      icon: Sparkles,
-      title: "Healing & Restoration",
-      description: "Through art and faith, we help people find healing and express their journey of restoration.",
-      position: { x: 22, y: 15 } // Upper left
+      title: "Community",
+      description: "Building relationships that last"
     }
   ];
 
-  // Auto-cycle through values
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveValue((prev) => (prev + 1) % values.length);
-    }, 3000); // Change every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [values.length]);
-
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg) return;
-
-    // Clear existing content
-    svg.innerHTML = '';
-
-    // Create a proper cross shape (not plus sign)
-    const createCross = () => {
-      // Vertical beam of cross - longer and moved up
-      const verticalRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      verticalRect.setAttribute('x', '48'); // Center horizontally
-      verticalRect.setAttribute('y', '15'); // Start higher up
-      verticalRect.setAttribute('width', '4'); // Width of beam
-      verticalRect.setAttribute('height', '65'); // Much longer height for proper cross
-      verticalRect.setAttribute('fill', '#dc2626');
-      verticalRect.setAttribute('opacity', '0.6');
-      verticalRect.setAttribute('rx', '2'); // Rounded corners
-      
-      // Horizontal beam of cross - positioned higher on vertical beam
-      const horizontalRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      horizontalRect.setAttribute('x', '30'); // Start further left
-      horizontalRect.setAttribute('y', '35'); // Higher up on the vertical beam
-      horizontalRect.setAttribute('width', '40'); // Width of beam
-      horizontalRect.setAttribute('height', '4'); // Height of beam
-      horizontalRect.setAttribute('fill', '#dc2626');
-      horizontalRect.setAttribute('opacity', '0.6');
-      horizontalRect.setAttribute('rx', '2'); // Rounded corners
-
-      svg.appendChild(verticalRect);
-      svg.appendChild(horizontalRect);
-
-      // Add subtle glow effect
-      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
-      filter.setAttribute('id', 'glow');
-      
-      const feGaussianBlur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
-      feGaussianBlur.setAttribute('stdDeviation', '3');
-      feGaussianBlur.setAttribute('result', 'coloredBlur');
-      
-      const feMerge = document.createElementNS('http://www.w3.org/2000/svg', 'feMerge');
-      const feMergeNode1 = document.createElementNS('http://www.w3.org/2000/svg', 'feMergeNode');
-      feMergeNode1.setAttribute('in', 'coloredBlur');
-      const feMergeNode2 = document.createElementNS('http://www.w3.org/2000/svg', 'feMergeNode');
-      feMergeNode2.setAttribute('in', 'SourceGraphic');
-      
-      feMerge.appendChild(feMergeNode1);
-      feMerge.appendChild(feMergeNode2);
-      filter.appendChild(feGaussianBlur);
-      filter.appendChild(feMerge);
-      defs.appendChild(filter);
-      svg.appendChild(defs);
-
-      // Apply glow to cross elements
-      verticalRect.setAttribute('filter', 'url(#glow)');
-      horizontalRect.setAttribute('filter', 'url(#glow)');
-    };
-
-    createCross();
-  }, []);
-
   return (
-    <section className="relative py-32 bg-black overflow-hidden">
-      {/* Animated Background Lines */}
-      <svg
-        ref={svgRef}
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      />
-
+    <section className="relative min-h-screen flex items-center justify-center py-20 bg-gradient-to-b from-neutral-700 via-black to-neutral-800">
       {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-gradient-radial from-brand-red/20 via-transparent to-transparent"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-grid-pattern" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+          backgroundSize: '50px 50px'
+        }}></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4">
-        {/* Hero Title */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+        {/* Main Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="mb-16"
         >
-          <h2 className="text-6xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-gray-300 to-brand-red bg-clip-text text-transparent">
-              Our Sacred Values
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            Our 
+            <span 
+              className="block italic"
+              style={{ 
+                background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #0b0b0b 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
+              Foundation
             </span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Faith, artistry, and compassion woven together to create meaningful expressions of God&apos;s love through ink and intention.
+          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Built on faith, driven by purpose, and committed to excellence in sacred artistry.
           </p>
         </motion.div>
 
-        {/* Values Cross Layout */}
-        <div className="relative">
-          {values.map((value, index) => {
-            const IconComponent = value.icon;
-            const isActive = activeValue === index;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                style={{
-                  left: `${value.position.x}%`,
-                  top: `${value.position.y}%`,
-                }}
-                onClick={() => setActiveValue(index)}
-                onMouseEnter={() => setActiveValue(index)}
-              >
-                <div className="group relative">
-                  {/* Icon Circle */}
-                  <div className={`w-20 h-20 bg-gradient-to-br from-brand-red to-red-800 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 border-4 ${
-                    isActive ? 'border-white/40 scale-125' : 'border-white/10 scale-100'
-                  }`}>
-                    <IconComponent className="w-10 h-10 text-white" />
-                  </div>
-                  
-                  {/* Value Content - Always show for active value with smart positioning */}
-                  <div 
-                    className={`absolute w-80 text-center transition-all duration-500 ${
-                      isActive ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
-                    }`}
-                    style={{
-                      top: value.position.y > 50 ? '-120px' : '80px', // Position above if bottom half, below if top half
-                      left: value.position.x > 50 ? '-320px' : '0px', // Position left if right side, right if left side
-                      transform: value.position.x > 50 ? 'translateX(0)' : 'translateX(-50%)'
-                    }}
-                  >
-                    <div className="bg-neutral-900/95 backdrop-blur-sm rounded-xl p-6 border border-brand-red/20 shadow-2xl">
-                      <h3 className="text-xl font-bold text-white mb-3">{value.title}</h3>
-                      <p className="text-gray-300 text-sm leading-relaxed">{value.description}</p>
-                    </div>
-                  </div>
-
-                  {/* Enhanced pulse animation for active value */}
-                  {isActive && (
-                    <div className="absolute inset-0 w-20 h-20 bg-brand-red/40 rounded-full animate-ping"></div>
-                  )}
-                  
-                  {/* Subtle pulse for inactive values */}
-                  {!isActive && (
-                    <div className="absolute inset-0 w-20 h-20 bg-brand-red/20 rounded-full animate-pulse"></div>
-                  )}
-                </div>
-              </motion.div>
-            );
-          })}
+        {/* Values Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-16">
+          {coreValues.map((value, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="group"
+            >
+              <div className="mb-6">
+                <value.icon className="w-14 h-14 mx-auto text-red-900 group-hover:scale-110 transition-all duration-300" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-brand-red transition-colors duration-300">
+                {value.title}
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                {value.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Bottom spacing for absolute positioned elements */}
-        <div className="h-96"></div>
-
-        {/* Progress Indicator */}
+        {/* Quote Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="max-w-4xl mx-auto"
         >
-          <div className="flex gap-2">
-            {values.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveValue(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  activeValue === index ? 'bg-brand-red scale-125' : 'bg-white/30 hover:bg-white/50'
-                }`}
-              />
-            ))}
+          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/10">
+            <blockquote className="text-2xl md:text-3xl font-light text-white leading-relaxed italic mb-6">
+              &ldquo;Every tattoo begins with prayer, ensuring God&apos;s blessing on both the artwork and the journey it represents.&rdquo;
+            </blockquote>
+            <cite className="text-brand-red font-semibold text-lg">— Steve White, Master Artist</cite>
+          </div>
+        </motion.div>
+
+        {/* Experience Banner */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-16"
+        >
+          <div className="inline-flex items-center gap-4 border border-yellow-500 rounded-full px-8 py-4">
+            <div className="text-4xl font-bold text-brand-red">21+</div>
+            <div className="text-left">
+              <div className="text-white font-semibold">Years of</div>
+              <div className="text-gray-300 text-sm">Faithful Service</div>
+            </div>
           </div>
         </motion.div>
       </div>

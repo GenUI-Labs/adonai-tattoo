@@ -1,77 +1,120 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useParallaxBackground } from '../hooks/useParallax';
+
+interface GalleryItem {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  height?: number;
+  uniqueKey?: string;
+}
+
+// Using Picsum Photos for reliable random image generation
 
 export default function GallerySection() {
-  const parallaxRef = useParallaxBackground({ 
-    speed: 0.4,
-    disabled: false
-  });
-  const galleryItems = [
-    {
-      id: 1,
-      title: "Featured Artwork",
-      image: "/gallery_images/FB_IMG_1756778136286.jpg",
-      description: "Professional tattoo artistry"
-    },
-    {
-      id: 2,
-      title: "Custom Design",
-      image: "/gallery_images/FB_IMG_1756778165287.jpg",
-      description: "Unique and meaningful artwork"
-    },
-    {
-      id: 3,
-      title: "Detailed Work",
-      image: "/gallery_images/FB_IMG_1756778176648.jpg",
-      description: "Precision and attention to detail"
-    },
-    {
-      id: 4,
-      title: "Portfolio Piece",
-      image: "/gallery_images/Screenshot_20250901_205637_Facebook.jpg",
-      description: "Creative and artistic expression"
-    },
-    {
-      id: 5,
-      title: "Client Showcase",
-      image: "/gallery_images/Screenshot_20250901_205657_Facebook.jpg",
-      description: "Beautiful finished work"
-    },
-    {
-      id: 6,
-      title: "Artistic Excellence",
-      image: "/gallery_images/Screenshot_20250901_205749_Facebook.jpg",
-      description: "Quality craftsmanship and artistry"
+  const [displayedItems, setDisplayedItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [allLoaded, setAllLoaded] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadTriggerRef = useRef<HTMLDivElement>(null);
+
+
+  // Generate random image data using Picsum Photos
+  const generateRandomImage = useCallback((id: number): GalleryItem => {
+    const randomHeight = Math.floor(Math.random() * 200) + 300;
+    const width = 400;
+    
+    // Using Picsum Photos for reliable image loading
+    const imageUrl = `https://picsum.photos/${width}/${randomHeight}?random=${id}`;
+    
+    return {
+      id,
+      title: `Artwork ${id}`,
+      image: imageUrl,
+      description: "Professional tattoo artistry and sacred design",
+      height: randomHeight,
+      uniqueKey: `img-${id}-${Math.random().toString(36).substr(2, 9)}-${Date.now()}`
+    };
+  }, []);
+
+  // Load more items function
+  const loadMoreItems = useCallback(() => {
+    if (loading || !hasMore) return;
+    
+    const currentLength = displayedItems.length;
+    
+    // Stop at 30 images total
+    if (currentLength >= 30) {
+      setHasMore(false);
+      setAllLoaded(true);
+      return;
     }
-  ];
+    
+    setLoading(true);
+    
+    // Generate and add 8 new images directly
+    setTimeout(() => {
+      const newItems = Array.from({ length: 8 }, (_, index) => 
+        generateRandomImage(currentLength + index + 1)
+      );
+      
+      setDisplayedItems(prev => [...prev, ...newItems]);
+      setLoading(false);
+    }, 500);
+  }, [loading, hasMore, displayedItems.length, generateRandomImage]);
+
+  // Load initial items
+  useEffect(() => {
+    const initialItems = Array.from({ length: 9 }, (_, index) => 
+      generateRandomImage(index + 1)
+    );
+    setDisplayedItems(initialItems);
+  }, [generateRandomImage]);
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    if (!loadTriggerRef.current || !hasMore) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasMore && !loading) {
+          loadMoreItems();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '100px'
+      }
+    );
+
+    observerRef.current.observe(loadTriggerRef.current);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [hasMore, loading, loadMoreItems]);
 
   return (
     <section 
-      ref={parallaxRef}
-      className="relative py-20 overflow-hidden parallax-container"
+      ref={sectionRef}
+      className="relative py-20 overflow-hidden bg-black"
     >
-      {/* Background Image with Parallax */}
-      <div className="parallax-bg z-0">
-        <Image
-          src="/Gallery_background.png"
-          alt="Adonai Tattoo Gallery Background"
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-black/75"></div>
-      </div>
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-4">
+        {/* Header */}
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-bold text-center mb-4"
+          className="text-3xl md:text-4xl font-bold text-center mb-4 text-white"
         >
           Our Work
         </motion.h2>
@@ -79,19 +122,21 @@ export default function GallerySection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-gray-400 text-center mb-16 max-w-2xl mx-auto"
+          className="text-gray-300 text-center mb-12 md:mb-16 max-w-2xl mx-auto px-4 text-base md:text-lg"
         >
           Each piece tells a story of faith, hope, and personal journey. Browse our collection of Christian-inspired artwork.
         </motion.p>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {galleryItems.map((item, index) => (
+        {/* Masonry Grid Layout */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+          {displayedItems.map((item, index) => (
             <motion.div
-              key={item.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="gallery-item group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl min-h-[200px] border border-white/10 hover:border-brand-red/30"
+              key={item.uniqueKey}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: (index % 6) * 0.1 }}
+              className="gallery-item group relative bg-neutral-800 rounded-lg overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-2xl border border-white/10 hover:border-brand-red/30 break-inside-avoid mb-4"
+              style={{ height: `${item.height}px` }}
             >
               {/* Image */}
               <div className="absolute inset-0">
@@ -100,29 +145,27 @@ export default function GallerySection() {
                   alt={item.title}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                  priority={index < 3}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  priority={index < 9}
                   unoptimized={true}
                   onError={(e) => {
-                    // Fallback to regular img tag if Next.js Image fails
+                    console.error('Image failed to load:', item.image, e);
+                    // Fallback to a different Picsum image
                     const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallbackImg = document.createElement('img');
-                    fallbackImg.src = item.image;
-                    fallbackImg.alt = item.title;
-                    fallbackImg.className = 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500';
-                    target.parentNode?.appendChild(fallbackImg);
+                    if (target.src.includes('picsum.photos')) {
+                      target.src = `https://picsum.photos/400/${item.height}?random=${item.id + 1000}`;
+                    }
                   }}
                 />
               </div>
               
               {/* Enhanced Overlay for better contrast */}
-              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               
               {/* Content */}
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-end p-4 text-center">
-                <h3 className="text-white font-semibold mb-1 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">{item.title}</h3>
-                <p className="text-gray-200 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <h3 className="text-white font-semibold mb-1 text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg">{item.title}</h3>
+                <p className="text-gray-200 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-lg">
                   {item.description}
                 </p>
               </div>
@@ -132,17 +175,45 @@ export default function GallerySection() {
             </motion.div>
           ))}
         </div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-12"
-        >
-          <p className="text-gray-300 text-sm bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 inline-block border border-white/10">
-            Hover over each image to see more details about our work.
-          </p>
-        </motion.div>
+
+        {/* Load Trigger Element */}
+        {hasMore && (
+          <div ref={loadTriggerRef} className="h-10 w-full"></div>
+        )}
+
+        {/* Loading Indicator */}
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-center items-center mt-8 mb-4"
+          >
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-red"></div>
+            <span className="ml-3 text-gray-300">Loading more artwork...</span>
+          </motion.div>
+        )}
+
+        {/* End Message */}
+        {allLoaded && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mt-12 mb-8"
+          >
+            <div className="bg-gradient-to-r from-brand-red/20 via-black/50 to-brand-red/20 backdrop-blur-sm rounded-2xl p-8 border border-brand-red/20">
+              <h3 className="text-2xl font-bold text-white mb-3">
+                You&apos;ve Seen It All!
+              </h3>
+              <p className="text-gray-300 mb-4">
+                That&apos;s our complete featured collection. Each piece represents years of passion and faith-driven artistry.
+              </p>
+              <p className="text-brand-red text-sm font-medium">
+                Ready to create your own masterpiece? Get in touch below.
+              </p>
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );

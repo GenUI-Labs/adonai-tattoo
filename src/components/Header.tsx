@@ -65,7 +65,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition delay-300 duration-1000 fade-in-out ${
+      <header className={`fixed top-0 left-0 right-0 z-50 transition delay-300 duration-1000 fade-in fade-out ${
         isScrolled 
           ? 'bg-gradient-to-b from-black/95 to-red-900/70 backdrop-blur-sm' 
           : 'bg-transparent opacity-100'
